@@ -64,6 +64,8 @@ class Post(models.Model):
     # django.contrib.auth 是 Django 内置的应用，专门用于处理网站用户的注册、登录等流程，User 是 Django 为我们已经写好的用户模型。
     # 文章和作者是多对一的关系
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # 新增views字段记录阅读量
+    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -86,6 +88,10 @@ class Post(models.Model):
         # 从文本摘取前54隔字符给excerpt
         self.excerpt = strip_tags(md.convert(self.body))[:54]
         super().save(*args, **kwargs)
+
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
 
     class Meta:
         verbose_name = '文章'

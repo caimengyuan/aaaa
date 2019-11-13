@@ -12,6 +12,7 @@
                 "name": "pypi",
                 "url": "https://pypi.douban.com/simple",
                 "verify_ssl": true
+                "verify_ssl": true
             }
         ]
     },
