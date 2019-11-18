@@ -3,6 +3,7 @@ import re
 from .models import Post, Category, Tag
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
+from django.core.paginator import Paginator
 from markdown.extensions.toc import TocExtension
 '''
     首先接受了一个名为 request 的参数，这个 request 就是 Django 为我们封装好的 HTTP 请求，
@@ -12,14 +13,45 @@ Django 帮我们封装好的，它是类 HttpResponse 的一个实例，只是�
 # Create your views here.
 
 
-def index(request):
+def index(request, page):
     # return HttpResponse('welcome')
     # return render(request, 'blog/index.html',
     #               context={'title': '我的博客首页',
     #                        'welcome': '欢迎访问'})
     # post_list = Post.objects.all().order_by('-created_time')
     post_list = Post.objects.all()
-    return render(request, 'blog/index.html', context={'post_list': post_list})
+    # 对数据进行分页
+    paginator = Paginator(post_list, 5)
+    # 获取第page页的内容
+    try:
+        page = int(page)
+    except Exception as e:
+        page = 1
+
+    if page > paginator.num_pages:
+        page = 1
+
+    # 获取第page页的page实例对象
+    blog = paginator.page(page)
+
+    # todo:进行页码的控制，一个页面上最多显示5个页码
+    # 1.总页数少于5页，页面上显示所有页码
+    # 2.如果当前页是前3页，显示1-5页
+    # 3.如果当前页是后3页，显示后五页
+    # 4.其他情况，显示当前页的前2页，当前页，当前页的后2页
+    num_pages = paginator.num_pages
+    if num_pages < 5:
+        page = range(1, num_pages+1)
+    elif page <= 3:
+        page = range(1, 6)
+    elif num_pages - page <= 2:
+        page = range(num_pages-4, num_pages+1)
+    else:
+        page = range(page-2, page+3)
+
+    # 组织模板上下文
+    context = {'blog': blog, 'page': page, 'post_list': post_list}
+    return render(request, 'blog/index.html', context)
 
 
 def detail(request, pk):
@@ -88,3 +120,5 @@ def detail(request, pk):
     post.toc = m.group(1) if m is not None else ''
 
     return render(request, 'blog/detail.html', context={'post': post})
+
+

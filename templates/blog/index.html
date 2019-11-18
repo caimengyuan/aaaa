@@ -12,10 +12,10 @@
                         <div class="entry-meta">
                             <span class="post-category"><a href="#">{{ post.category.name }}</a></span>
                             <span class="post-date"><a href="#"><time class="entry-date"
-                                                                      datetime="2012-11-09T23:15:57+00:00">2017年5月11日</time></a></span>
+                                                                      datetime="2012-11-09T23:15:57+00:00">{{ post.created_time }}</time></a></span>
                             <span class="post-author"><a href="#">{{ post.author }}</a></span>
                             <span class="comments-link"><a href="{{ post.get_absolute_url }}#comment-area">{{ post.comment_set.count }} 评论</a></span>
-                            <span class="views-count"><a href="#">588 阅读</a></span>
+                            <span class="views-count"><a href="{{ post.get_absolute_url }}">{{ post.views }} 阅读</a></span>
                         </div>
                     </header>
                     <div class="entry-content clearfix">
@@ -29,17 +29,19 @@
                         <div class="no_post">暂时还没有发布的文章哟</div>
                 {% endfor %}
                 <div class="pagination">
-                    <ul>
-                        <li><a href="">1</a></li>
-                        <li><a href="">...</a></li>
-                        <li><a href="">4</a></li>
-                        <li><a href="">5</a></li>
-                        <li class="current"><a href="">6</a></li>
-                        <li><a href="">7</a></li>
-                        <li><a href="">8</a></li>
-                        <li><a href="">...</a></li>
-                        <li><a href="">11</a></li>
-                    </ul>
+                    {% if blog.has_previous %}
+                        <a href="{% url 'blog:index' blog.previous_page_number%}">上一页</a>
+                    {% endif %}
+                    {% for pindex in page %}
+                        {% if pindex == blog.number %}
+                            <a href="{% url 'blog:index' pindex %}" class="active">{{ pindex }}</a>
+                        {% else %}
+                            <a href="{% url 'blog:index' pindex %}">{{ pindex }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if blog.has_next %}
+                        <a href="{% url 'blog:index' blog.next_page_number %}">下一页</a>
+                    {% endif %}
                 </div>
 {% endblock main %}
 
