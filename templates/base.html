@@ -40,7 +40,7 @@
         <div class="row">
             <div class="col-md-4 col-sm-5 col-xs-8">
                 <div class="logo">
-                    <h1><a href="{% url 'blog:index' 1 %}"><b>Black</b> &amp; White</a></h1>
+                    <h1><a href="{% url 'blog:shouye'  %}"><b>Black</b> &amp; White</a></h1>
                 </div>
             </div><!-- col-md-4 -->
             <div class="col-md-8 col-sm-7 col-xs-4">
@@ -53,8 +53,8 @@
 
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="cl-effect-11"><a href="{% url 'blog:index' 1 %}" data-hover="首页">首页</a></li>
-                            <li class="cl-effect-11"><a href="{% url 'blog:index' 1 %}" data-hover="博客">博客</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:shouye'  %}" data-hover="首页">首页</a></li>
+                            <li class="cl-effect-11"><a href="{% url 'blog:page' 1 %}" data-hover="博客">博客</a></li>
                             <li class="cl-effect-11"><a href="about.html" data-hover="关于">关于</a></li>
                             <li class="cl-effect-11"><a href="contact.html" data-hover="联系">联系</a></li>
                         </ul>
@@ -113,19 +113,20 @@
 </footer>
 
 <!-- Mobile Menu -->
-<div class="overlay overlay-hugeinc">
-    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
-    <nav>
-        <ul>
-            <li><a href="index.html">首页</a></li>
-            <li><a href="full-width.html">博客</a></li>
-            <li><a href="about.html">关于</a></li>
-            <li><a href="contact.html">联系</a></li>
-        </ul>
-    </nav>
-</div>
+{#<div class="overlay overlay-hugeinc">#}
+{#    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>#}
+{#    <nav>#}
+{#        <ul>#}
+{#            <li><a href="shouye.html">首页</a></li>#}
+{#            <li><a href="full-width.html">博客</a></li>#}
+{#            <li><a href="about.html">关于</a></li>#}
+{#            <li><a href="contact.html">联系</a></li>#}
+{#        </ul>#}
+{#    </nav>#}
+{#</div>#}
 
 <script src="{% static 'blog/js/script.js' %}"></script>
-
+{% block bottomfiles %}
+{% endblock bottomfiles %}
 </body>
 </html>

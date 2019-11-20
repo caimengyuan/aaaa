@@ -1,5 +1,8 @@
 import markdown
 import re
+
+from django.http import HttpResponse
+
 from .models import Post, Category, Tag
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
@@ -13,15 +16,22 @@ Django 帮我们封装好的，它是类 HttpResponse 的一个实例，只是�
 # Create your views here.
 
 
-def index(request, page):
-    # return HttpResponse('welcome')
-    # return render(request, 'blog/index.html',
-    #               context={'title': '我的博客首页',
-    #                        'welcome': '欢迎访问'})
-    # post_list = Post.objects.all().order_by('-created_time')
+def shouye(request):
+    return render(request, 'blog/shouye.html',
+                  context={'title': '我的博客首页',
+                           'welcome': '欢迎访问'})
+#     # post_list = Post.objects.all().order_by('-created_time')
+#     post_list = Post.objects.all()
+#     context = {'post_list': post_list}
+#     return render(request, 'blog/page.html', context)
+
+
+def page(request, page):
     post_list = Post.objects.all()
     # 对数据进行分页
     paginator = Paginator(post_list, 5)
+    # if not page:
+    #     page = 1
     # 获取第page页的内容
     try:
         page = int(page)
@@ -41,17 +51,17 @@ def index(request, page):
     # 4.其他情况，显示当前页的前2页，当前页，当前页的后2页
     num_pages = paginator.num_pages
     if num_pages < 5:
-        page = range(1, num_pages+1)
+        page = range(1, num_pages + 1)
     elif page <= 3:
         page = range(1, 6)
     elif num_pages - page <= 2:
-        page = range(num_pages-4, num_pages+1)
+        page = range(num_pages - 4, num_pages + 1)
     else:
-        page = range(page-2, page+3)
+        page = range(page - 2, page + 3)
 
     # 组织模板上下文
     context = {'blog': blog, 'page': page, 'post_list': post_list}
-    return render(request, 'blog/index.html', context)
+    return render(request, 'blog/page.html', context)
 
 
 def detail(request, pk):
@@ -84,7 +94,7 @@ def archive(request, year, month):
     #                                 created_time__month=month).order_by('-created_time')
     post_list = Post.objects.filter(created_time__year=year,
                                     created_time__month=month)
-    return render(request, 'blog/index.html', context={'post_list': post_list})
+    return render(request, 'blog/page.html', context={'post_list': post_list})
 
 
 # 分类页面
@@ -92,7 +102,7 @@ def category(request, pk):
     cate = get_object_or_404(Category, pk=pk)
     # post_list = Post.objects.filter(category=cate).order_by('-created_time')
     post_list = Post.objects.filter(category=cate)
-    return render(request, 'blog/index.html', context={'post_list': post_list})
+    return render(request, 'blog/page.html', context={'post_list': post_list})
 
 
 # 标签页面
@@ -100,25 +110,5 @@ def tag(request, pk):
     t = get_object_or_404(Tag, pk=pk)
     # post_list = Post.objects.filter(tags=t).order_by('-created_time')
     post_list = Post.objects.filter(tags=t)
-    return render(request, 'blog/index.html', context={'post_list': post_list})
-
-
-def detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-
-    # 阅读量+1
-    post.increase_views()
-
-    md = markdown.Markdown(extensions=[
-        'markdown.extensions.extra',
-        'markdown.extensions.codehilite',
-        TocExtension(slugify=slugify),
-    ])
-    post.body = md.convert(post.body)
-
-    m = re.search(r'<div class="toc">\s*<ul>(.*)</ul>\s*</div>', md.toc, re.S)
-    post.toc = m.group(1) if m is not None else ''
-
-    return render(request, 'blog/detail.html', context={'post': post})
-
+    return render(request, 'blog/page.html', context={'post_list': post_list})
 

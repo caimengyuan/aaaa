@@ -30,17 +30,17 @@
                 {% endfor %}
                 <div class="pagination">
                     {% if blog.has_previous %}
-                        <a href="{% url 'blog:index' blog.previous_page_number%}">上一页</a>
+                        <a href="{% url 'blog:page' blog.previous_page_number%}">上一页</a>
                     {% endif %}
                     {% for pindex in page %}
                         {% if pindex == blog.number %}
-                            <a href="{% url 'blog:index' pindex %}" class="active">{{ pindex }}</a>
+                            <a href="{% url 'blog:page' pindex %}" class="active">{{ pindex }}</a>
                         {% else %}
-                            <a href="{% url 'blog:index' pindex %}">{{ pindex }}</a>
+                            <a href="{% url 'blog:page' pindex %}">{{ pindex }}</a>
                         {% endif %}
                     {% endfor %}
                     {% if blog.has_next %}
-                        <a href="{% url 'blog:index' blog.next_page_number %}">下一页</a>
+                        <a href="{% url 'blog:page' blog.next_page_number %}">下一页</a>
                     {% endif %}
                 </div>
 {% endblock main %}
