@@ -112,3 +112,12 @@ def tag(request, pk):
     post_list = Post.objects.filter(tags=t)
     return render(request, 'blog/page.html', context={'post_list': post_list})
 
+
+# 关于页面
+def about(request):
+    return render(request, 'blog/about.html')
+
+
+# 联系页面
+def contact(request):
+    return render(request, 'blog/contact.html')
